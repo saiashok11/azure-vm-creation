@@ -3,7 +3,7 @@
 variable "resource_group_name" {
   description = "Name of the resource group"
   type        = string
-  default     = "MYRG011"
+  default     = "MYRG012"
 }
 
 variable "location" {
@@ -119,7 +119,7 @@ variable "storage_container_name" {
 variable "backend_resource_group_name" {
   description = "Resource group name for storage account"
   type        = string
-  default     = "tf-backend-rg"
+  default     = "tf-backend-rg-new"
 }
 
 variable "environment_tag" {
