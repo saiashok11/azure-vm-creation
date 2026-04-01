@@ -1,4 +1,6 @@
 
+# Azure Provider Configuration
+
 provider "azurerm" {
   features {
     resource_group {
@@ -7,37 +9,55 @@ provider "azurerm" {
   }
 }
 
-/*
-terraform {
-  backend "azurerm" {
-    resource_group_name  = "tf-stage-azure-open-ai"
-    storage_account_name = "terraformstateopen2024ai"
-    container_name       = "terraformopenai2024"
-    key                  = "terraform.tfstate"
+# Terraform State Backend Resources
+
+resource "azurerm_resource_group" "backend" {
+  name     = var.backend_resource_group_name
+  location = var.location
+}
+
+resource "azurerm_storage_account" "tfstate" {
+  name                     = var.storage_account_name
+  resource_group_name      = azurerm_resource_group.backend.name
+  location                 = azurerm_resource_group.backend.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+
+  tags = {
+    environment = "backend"
+    purpose     = "terraform-state file"
   }
-}*/
+}
+
+resource "azurerm_storage_container" "tfstate" {
+  name                  = var.storage_container_name
+  storage_account_name  = azurerm_storage_account.tfstate.name
+  container_access_type = "private"
+}
+
+# Main Application Resources
 
 resource "azurerm_resource_group" "example" {
-  name     = "example-resources5"
-  location = "West Europe"
+  name     = var.resource_group_name
+  location = var.location
 }
 
 resource "azurerm_virtual_network" "example" {
-  name                = "example-network3"
-  address_space       = ["10.0.0.0/16"]
+  name                = var.virtual_network_name
+  address_space       = var.address_space
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
 }
 
 resource "azurerm_subnet" "example" {
-  name                 = "example-subnet3"
+  name                 = var.subnet_name
   resource_group_name  = azurerm_resource_group.example.name
   virtual_network_name = azurerm_virtual_network.example.name
-  address_prefixes     = ["10.0.2.0/24"]
+  address_prefixes     = var.subnet_address_prefixes
 }
 
 resource "azurerm_network_interface" "example" {
-  name                = "example-nic3"
+  name                = var.network_interface_name
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
 
@@ -49,30 +69,30 @@ resource "azurerm_network_interface" "example" {
 }
 
 resource "azurerm_virtual_machine" "example" {
-  name                  = "example-machine3"
+  name                  = var.vm_name
   location              = azurerm_resource_group.example.location
   resource_group_name   = azurerm_resource_group.example.name
   network_interface_ids = [azurerm_network_interface.example.id]
-  vm_size               = "Standard_DS1_v2"
+  vm_size               = var.vm_size
 
   storage_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
-    version   = "latest"
+    publisher = var.image_publisher
+    offer     = var.image_offer
+    sku       = var.image_sku
+    version   = var.image_version
   }
 
   storage_os_disk {
-    name              = "example-os-disk"
+    name              = var.os_disk_name
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
 
   os_profile {
-    computer_name  = "example-machine"
-    admin_username = "adminuser"
-    admin_password = "AdminPassword123!"
+    computer_name  = var.computer_name
+    admin_username = var.admin_username
+    admin_password = var.admin_password
   }
 
   os_profile_linux_config {
@@ -80,6 +100,6 @@ resource "azurerm_virtual_machine" "example" {
   }
 
   tags = {
-    environment = "testing"
+    environment = var.environment_tag
   }
 }
