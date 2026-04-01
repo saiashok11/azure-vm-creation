@@ -38,5 +38,4 @@ jobs:
         run: terraform apply -auto-approve
         
       # - name: Terraform destroy
-      #   if: github.event_name == 'workflow_dispatch'
       #   run: terraform destroy -auto-approve
