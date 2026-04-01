@@ -1,7 +1,9 @@
+# this are the variables for the Azure VM deployment using Terraform
+
 variable "resource_group_name" {
   description = "Name of the resource group"
   type        = string
-  default     = "MYRG01"
+  default     = "MYRG011"
 }
 
 variable "location" {

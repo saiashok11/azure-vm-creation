@@ -1,4 +1,4 @@
-
+# main config file
 provider "azurerm" {
   features {
     resource_group {
@@ -22,7 +22,7 @@ resource "azurerm_storage_account" "tfstate" {
 
   tags = {
     environment = "backend"
-    purpose     = "terraform-state"
+    purpose     = "terraform-state file"
   }
 }
 
