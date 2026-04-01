@@ -1,12 +1,13 @@
 name: 'Terraform VM Creation workflow'
 
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+      - main
+      - newfeature
+  pull_request:
+    branches:
+      - main
 
 jobs:
   terraform:
