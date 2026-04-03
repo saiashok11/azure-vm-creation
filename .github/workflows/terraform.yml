@@ -1,12 +1,12 @@
 name: 'Terraform VM Creation Workflow'
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
 
 jobs:
   terraform:
@@ -36,5 +36,5 @@ jobs:
         if: github.event_name == 'push'
         run: terraform apply -auto-approve
         
-      - name: Terraform destroy
-        run: terraform destroy -auto-approve
+      # - name: Terraform destroy
+      #   run: terraform destroy -auto-approve
